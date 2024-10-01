@@ -1,101 +1,68 @@
-import Image from "next/image";
+'use client'; // Marks this component to be rendered on the client side, as Next.js uses server-side rendering by default
+import { useState } from 'react'; // Import useState from React for managing state
 
-export default function Home() {
+export default function TodoApp() {
+  // State to store the current input task and list of todos
+  const [task, setTask] = useState(''); // 'task' holds the current value in the input field, 'setTask' updates it
+  const [todos, setTodos] = useState<string[]>([]); // 'todos' holds the list of tasks, 'setTodos' updates the list
+
+  // Function to add a new task to the list
+  const addTodo = () => {
+    if (task.trim() === '') return; // If the input task is empty or just whitespace, do nothing
+    setTodos([...todos, task]); // Add the new task to the todos array using the spread operator to include existing tasks
+    setTask(''); // Clear the input field after the task is added
+  };
+
+  // Function to delete a task from the list by its index
+  const deleteTodo = (index: number) => {
+    const updatedTodos = todos.filter((_, i) => i !== index); // Filter out the task at the given index
+    setTodos(updatedTodos); // Update the todos array with the filtered result
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="min-h-screen bg-gray-100 p-5">
+      {/* Title of the Todo App */}
+      <h1 className="text-4xl text-center font-bold text-blue-600 mb-5">Simple Todo App</h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      {/* Input field and Add Task button */}
+      <div className="max-w-xl mx-auto flex space-x-2">
+        {/* Input field for the task */}
+        <input
+          type="text"
+          value={task} // The value of the input field is bound to the task state
+          onChange={(e) => setTask(e.target.value)} // Updates task state as the user types
+          className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Enter a task" // Placeholder text for the input field
+        />
+        {/* Add Task button */}
+        <button
+          onClick={addTodo} // When clicked, it calls the addTodo function to add the current task
+          className="p-3 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-200"
+        >
+          Add Task
+        </button>
+      </div>
+
+      {/* Task list section */}
+      <ul className="max-w-xl mx-auto mt-5 space-y-2">
+        {/* Loop through todos array and render each task */}
+        {todos.map((todo, index) => (
+          <li
+            key={index} // Key helps React keep track of each list item for efficient updates
+            className="p-3 bg-white border border-gray-300 rounded shadow flex justify-between items-center"
           >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+            {/* Display the task along with its index */}
+            <span>{index + 1}. {todo}</span>
+            {/* Delete button for removing the task */}
+            <button
+              onClick={() => deleteTodo(index)} // Calls the deleteTodo function with the current task's index
+              className="bg-red-500 text-white p-2 rounded hover:bg-red-600 transition duration-200"
+            >
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
